@@ -12,6 +12,7 @@ import AboutPage from "./pages/AboutPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ContactPage from "./pages/ContactPage";
 import ChatbotPage from "./pages/ChatbotPage";
+import Services from "./pages/Services";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/chatbot" element={<ChatbotPage />} />
+            <Route path="/services" element={<Services />} />
             <Route path="*" element={<HomePage />} /> {/* fallback to home */}
           </Routes>
         </Container>
