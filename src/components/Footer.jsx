@@ -9,8 +9,8 @@ export default function Footer() {
       <Container maxWidth="lg" sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <Typography>© 2026 Muhammad Kashif. All rights reserved.</Typography>
         <Box>
-          <Link href="#" sx={{ color: "#fff", mx: 1 }}><GitHubIcon /></Link>
-          <Link href="#" sx={{ color: "#fff", mx: 1 }}><LinkedInIcon /></Link>
+          <Link href="https://github.com/MKashif-786" sx={{ color: "#fff", mx: 1 }}><GitHubIcon /></Link>
+          <Link href="https://www.linkedin.com/in/muhammad-kashif-4667342b0/" sx={{ color: "#fff", mx: 1 }}><LinkedInIcon /></Link>
         </Box>
         <Typography variant="caption">Designed & Built by Me</Typography>
       </Container>

@@ -9,7 +9,7 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
-
+import pdf from "../assets/pdf.pdf";
 const skills = [
   "React",
   "MUI",
@@ -123,7 +123,7 @@ export default function About() {
         <Box sx={{ display: "flex", gap: 2, mt: 3, flexWrap: "wrap" }}>
           <Button
             variant="contained"
-            href="/Muhammad_Kashif_CV.pdf"
+            href={pdf}
             target="_blank"
             sx={{
               borderRadius: 3,
@@ -142,7 +142,7 @@ export default function About() {
 
           <Button
             variant="outlined"
-            href="/Muhammad_Kashif_CV.pdf"
+            href={pdf}
             download
             sx={{
               borderRadius: 3,
