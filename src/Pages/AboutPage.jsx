@@ -27,7 +27,7 @@ const skills = [
   "Discipline",
 ];
 
-export default function About() {
+export default function AboutPage() {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
 

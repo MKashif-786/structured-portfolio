@@ -7,12 +7,12 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 // Pages
-import HomePage from "./pages/HomePage";
-import AboutPage from "./pages/AboutPage";
-import ProjectsPage from "./pages/ProjectsPage";
-import ContactPage from "./pages/ContactPage";
-import ChatbotPage from "./pages/ChatbotPage";
-import Services from "./pages/Services";
+import HomePage from "./Pages/HomePage";
+import AboutPage from "./Pages/AboutPage";
+import ProjectsPage from "./Pages/ProjectsPage";
+import ContactPage from "./Pages/ContactPage";
+import ChatbotPage from "./Pages/ChatbotPage";
+import Services from "./Pages/Services";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
