@@ -1,4 +1,7 @@
 import React from "react";
+import thumb from "../assets/Images/thumb.jpg";
+import file from "../assets/Images/file.png";
+import todo from "../assets/Images/todo.png";
 import {
   Box,
   Grid,
@@ -14,22 +17,22 @@ const projects = [
     title: "Portfolio Website",
     description:
       "A modern portfolio built with React and MUI, featuring an interactive chatbot and smooth animations.",
-    image: "https://via.placeholder.com/400x250.png?text=Portfolio+Website",
-    link: "#",
+    image: thumb,
+    link: "capable-cupcake-055071.netlify.app",
   },
   {
-    title: "E-commerce App",
+    title: "To Do List App",
     description:
       "Full-stack e-commerce application using React and Node.js with authentication and cart functionality.",
-    image: "https://via.placeholder.com/400x250.png?text=E-commerce+App",
-    link: "#",
+    image: todo,
+    link: "https://shimmering-fox-8b3854.netlify.app/",
   },
   {
-    title: "AI Chatbot",
+    title: "File Sharing Platform",
     description:
       "Interactive AI chatbot integrated into a portfolio website for smart navigation and assistance.",
-    image: "https://via.placeholder.com/400x250.png?text=AI+Chatbot",
-    link: "#",
+    image: file,
+    link: "https://myfilehare.netlify.app/login",
   },
 ];
 

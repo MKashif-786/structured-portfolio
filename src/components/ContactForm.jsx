@@ -154,7 +154,7 @@ export default function ContactForm() {
 
           <IconButton
             component="a"
-            href="https://www.linkedin.com/in/muhammadkashif/"
+            href="https://www.linkedin.com/in/muhammad-kashif-4667342b0/"
             target="_blank"
             rel="noopener"
             sx={{
