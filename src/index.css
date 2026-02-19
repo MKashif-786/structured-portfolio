@@ -1,7 +1,3 @@
 body {
-  margin: 0;
-  background-image: url("./assets/Images/clean.jfif");
-  background-size: cover;
-  background-position: center;
-  min-height: 100vh;
+  background-image: url("/clean.jfif");
 }
