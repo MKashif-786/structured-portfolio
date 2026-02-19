@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import background from '../public/clean.jfif';
+import background from './assets/Images/clean.jfif';
 import './index.css'
 import "./App.css"
 import App from './App.jsx'
