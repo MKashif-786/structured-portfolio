@@ -114,8 +114,8 @@ export default function Navbar({ darkMode, setDarkMode }) {
                     location.pathname === item.path
                       ? "#fff"
                       : darkMode
-                      ? "#fff"
-                      : "#000",
+                        ? "#fff"
+                        : "#000",
                   transition: "0.3s",
                   "&:hover": {
                     background: "linear-gradient(45deg, #1976d2, #9c27b0)",
@@ -132,13 +132,16 @@ export default function Navbar({ darkMode, setDarkMode }) {
 
           {/* MOBILE MENU ICON */}
           <IconButton
-            color="inherit"
             edge="end"
             onClick={handleDrawerToggle}
-            sx={{ display: { sm: "none" } }}
+            sx={{
+              display: { sm: "none" },
+              color: darkMode ? "#fff" : "#000", // black in light mode, white in dark mode
+            }}
           >
             <MenuIcon />
           </IconButton>
+
         </Toolbar>
       </AppBar>
 
@@ -205,8 +208,8 @@ export default function Navbar({ darkMode, setDarkMode }) {
                       location.pathname === item.path
                         ? "#fff"
                         : darkMode
-                        ? "#fff"
-                        : "#000",
+                          ? "#fff"
+                          : "#000",
                     fontWeight: 600,
                     fontSize: { xs: "0.95rem", sm: "1.1rem" },
                   }}
