@@ -2,6 +2,7 @@ import React from "react";
 import thumb from "../assets/Images/thumb.jpg";
 import file from "../assets/Images/file.png";
 import todo from "../assets/Images/todo.png";
+import nexhub from "../assets/Images/nexhub.jpg";
 import {
   Box,
   Grid,
@@ -33,6 +34,13 @@ const projects = [
       "Interactive AI chatbot integrated into a portfolio website for smart navigation and assistance.",
     image: file,
     link: "https://myfilehare.netlify.app/login",
+  },
+   {
+    title: "NexusHub Business Management Dashboars",
+    description:
+      "NexaHub is a modern business management dashboard for managing customers, products, orders, and business operations efficiently.",
+    image: nexhub,
+    link: "https://business-managemnt-dashboard.netlify.app/",
   },
 ];
 
