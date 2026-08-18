@@ -1,316 +1,569 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
-  IconButton,
-  Modal,
   Paper,
   Typography,
   TextField,
+  IconButton,
   Button,
-  useTheme
+  Avatar,
+  Fade,
+  Divider,
+  Chip,
 } from "@mui/material";
-import ChatIcon from "@mui/icons-material/Chat";
-import SendIcon from "@mui/icons-material/Send";
 
-const responses = [
-  // Basic Intro
-  { question: /hi|hello|hey/i, answer: "Hello! 👋 I'm Muhammad Kashif’s portfolio assistant. How can I help you today?" },
-  { question: /who are you/i, answer: "I'm an interactive AI assistant built to guide you through Muhammad Kashif’s portfolio." },
-  { question: /who is muhammad kashif/i, answer: "Muhammad Kashif is a frontend developer with a background in Mathematics and strong analytical skills.", action: "about" },
-
-  // About
-  { question: /about/i, answer: "Muhammad Kashif is a mathematics graduate and frontend developer skilled in React and MUI.", action: "about" },
-  { question: /location|where.*from/i, answer: "He is based in Vehari, Punjab, Pakistan." },
-  { question: /experience/i, answer: "He has practical experience building modern React and MUI portfolio applications." },
-
-  // Education
-  { question: /education/i, answer: "He completed a Bachelor of Science in Mathematics in 2021." },
-  { question: /degree/i, answer: "BSc in Mathematics." },
-  { question: /university|college/i, answer: "Govt. Post Graduate College, Vehari." },
-
-  // Skills
-  { question: /skills/i, answer: "React, MUI, JavaScript, HTML, CSS, Node.js, Numerical Analysis, MS Office.", action: "about" },
-  { question: /react/i, answer: "He builds responsive modern interfaces using React and MUI." },
-  { question: /javascript/i, answer: "Strong knowledge of JavaScript including ES6+ features." },
-  { question: /node/i, answer: "Basic backend knowledge using Node.js." },
-  { question: /css|html/i, answer: "Experienced in building responsive layouts using HTML and CSS." },
-
-  // Projects
-  { question: /projects/i, answer: "He has built interactive portfolio and frontend applications.", action: "projects" },
-  { question: /work/i, answer: "You can explore his recent frontend projects.", action: "projects" },
-  { question: /portfolio/i, answer: "This portfolio showcases his frontend and analytical skills." },
-
-  // CV
-  { question: /cv|resume/i, answer: "You can preview or download his CV below.", action: "cv" },
-
-  // Contact
-  { question: /contact/i, answer: "You can reach him via email or LinkedIn.", action: "contact" },
-  { question: /email/i, answer: "Email: kashif8325113@gmail.com" },
-  { question: /phone/i, answer: "Phone: 0323-8325113" },
-  { question: /linkedin/i, answer: "Visit his LinkedIn profile for professional updates.", action: "links" },
-
-  // Personality & Strength
-  { question: /strength/i, answer: "Strong analytical thinking, problem-solving, and discipline." },
-  { question: /teamwork/i, answer: "He values teamwork and collaborative problem solving." },
-  { question: /communication/i, answer: "Strong communication skills in professional environments." },
-
-  // Career
-  { question: /job/i, answer: "He is open to frontend development opportunities." },
-  { question: /hire/i, answer: "You can contact him for frontend development roles or collaboration.", action: "contact" },
-
-  // Tools
-  { question: /mui/i, answer: "He uses Material UI for modern and consistent design systems." },
-  { question: /ms office/i, answer: "Proficient in MS Word, Excel, and PowerPoint." },
-
-  // Quick Short Questions
-  { question: /age/i, answer: "Please contact directly for personal details." },
-  { question: /github/i, answer: "You can visit his GitHub profile.", action: "links" },
-  { question: /available/i, answer: "Yes, available for frontend projects and collaborations." },
-
-  // Analytical Skills
-  { question: /mathematics/i, answer: "He has strong foundations in Mathematics and numerical analysis." },
-  { question: /problem solving/i, answer: "Analytical thinking is one of his strongest skills." },
-
-  // Extra Professional Questions
-  { question: /why hire/i, answer: "Because he combines analytical thinking with modern frontend development skills." },
-  { question: /goal/i, answer: "To build professional, scalable, and visually appealing web applications." },
-  { question: /future/i, answer: "He aims to grow as a full-stack developer." },
-
-  // Default
-  { question: /.*/, answer: "You can explore his About, Projects, or Contact sections for detailed information.", action: "about" }
-];
-
+import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import MinimizeRoundedIcon from "@mui/icons-material/MinimizeRounded";
 
 export default function ChatbotWidget() {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
-
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hello! I’m your portfolio assistant. Ask me anything about Muhammad Kashif." }
-  ]);
+  const [minimized, setMinimized] = useState(false);
   const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      sender: "bot",
+      text: "Hi! 👋 I'm Kashif's portfolio assistant. How can I help you?",
+      time: "Now",
+    },
+  ]);
+
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, isTyping]);
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-
-    const userMessage = { sender: "user", text: input };
-    setMessages(prev => [...prev, userMessage]);
-
-    const response = responses.find(r => r.question.test(input));
-
-    setTimeout(() => {
-      setMessages(prev => [
-        ...prev,
-        { sender: "bot", text: response.answer, action: response.action }
-      ]);
-    }, 500);
-
-    setInput("");
-  };
-
-  const handleActionClick = (action) => {
-  switch (action) {
-    case "about":
-      navigate("/about");
-      break;
-
-    case "projects":
-      navigate("/projects");
-      break;
-
-    case "contact":
-      navigate("/contact");
-      break;
-
-    case "cv":
-      window.open("/Muhammad_Kashif_CV.pdf", "_blank");
-      break;
-
-    case "links":
-      window.open("https://www.linkedin.com/in/muhammadkashif/", "_blank");
-      break;
-
-    default:
-      break;
-  }
-
-  setOpen(false); // optional: auto close chatbot after click
-};
-const navigate = useNavigate();
-  return (
-    <>
-      {/* Floating Button */}
-      <IconButton
-        onClick={() => setOpen(true)}
-        sx={{
-          position: "fixed",
-          bottom: 30,
-          right: 30,
-          width: 65,
-          height: 65,
-          borderRadius: "50%",
-          zIndex: 1000,
-          background: "linear-gradient(45deg, #1976d2, #9c27b0)",
-          color: "#fff",
-          boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
-          transition: "0.3s",
-          "&:hover": {
-            transform: "scale(1.1)",
-            boxShadow: "0 8px 25px rgba(0,0,0,0.5)"
-          }
-        }}
-      >
-        <ChatIcon fontSize="large" />
-      </IconButton>
-
-      {/* Modal */}
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <Paper
-          sx={{
-            position: "fixed",
-            bottom: 110,
-            right: 30,
-            width: { xs: "92%", sm: 420 },
-            maxHeight: 800,
-            display: "flex",
-            flexDirection: "column",
-            borderRadius: 4,
-            p: 2,
-            backdropFilter: "blur(15px)",
-            backgroundColor: isDark
-              ? "rgba(30,30,30,0.9)"
-              : "rgba(255,255,255,0.95)",
-            boxShadow: isDark
-              ? "0 8px 32px rgba(0,0,0,0.7)"
-              : "0 8px 32px rgba(0,0,0,0.2)",
-            animation: "fadeIn 0.3s ease"
-          }}
-        >
-          {/* Header */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                background: "linear-gradient(45deg, #1976d2, #9c27b0)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent"
-              }}
-            >
-              Portfolio Assistant
-            </Typography>
-            <Button size="small" onClick={() => setOpen(false)}>
-              Close
-            </Button>
-          </Box>
-
-          {/* Messages */}
-          <Box sx={{ flex: 1, overflowY: "auto", mb: 1 }}>
-            {messages.map((msg, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: "flex",
-                  justifyContent:
-                    msg.sender === "user" ? "flex-end" : "flex-start",
-                  mb: 1
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 1.5,
-                    maxWidth: "80%",
-                    borderRadius: 3,
-                    background:
-                      msg.sender === "user"
-                        ? "linear-gradient(45deg, #1976d2, #9c27b0)"
-                        : isDark
-                        ? "#2a2a2a"
-                        : "#f0f0f0",
-                    color:
-                      msg.sender === "user"
-                        ? "#fff"
-                        : theme.palette.text.primary
-                  }}
-                >
-                  <Typography variant="body2">{msg.text}</Typography>
-
-                  {msg.action && msg.sender === "bot" && (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      sx={{
-                        mt: 1,
-                        borderRadius: 2,
-                        background: "linear-gradient(45deg, #1976d2, #9c27b0)"
-                      }}
-                      onClick={() => handleActionClick(msg.action)}
-                    >
-                      {msg.action === "cv" ? "Download CV" : "View"}
-                    </Button>
-                  )}
-                </Paper>
-              </Box>
-            ))}
-            <div ref={messagesEndRef} />
-          </Box>
-<Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-  {[
+  const quickQuestions = [
     "Who is Muhammad Kashif?",
     "What are your skills?",
     "Show me your projects",
-    "Download CV",
-    "How can I contact you?"
-  ].map((question, index) => (
-    <Button
-      key={index}
-      size="small"
-      variant="outlined"
-      onClick={() => {
-        setInput(question);
-        setTimeout(() => sendMessage(), 100);
-      }}
-      sx={{
-        borderRadius: 5,
-        textTransform: "none",
-      }}
-    >
-      {question}
-    </Button>
-  ))}
-</Box>
+    "How can I contact you?",
+  ];
 
-          {/* Input */}
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Ask something..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            />
-            <IconButton
-              onClick={sendMessage}
+  const getBotResponse = (question) => {
+    const text = question.toLowerCase();
+
+    if (text.includes("who") || text.includes("about")) {
+      return "Muhammad Kashif is a frontend developer with a background in Mathematics. He works with modern web technologies including React, JavaScript, HTML, CSS and MUI.";
+    }
+
+    if (text.includes("skill")) {
+      return "Kashif's skills include HTML, CSS, JavaScript, React, MUI, Node.js, Git, responsive web development and problem solving.";
+    }
+
+    if (text.includes("project") || text.includes("work")) {
+      return "He has worked on several frontend projects including portfolio applications, e-commerce interfaces, dashboards and interactive web applications.";
+    }
+
+    if (text.includes("contact") || text.includes("hire")) {
+      return "You can contact Muhammad Kashif through his email or LinkedIn profile. He's open to frontend development opportunities and collaborations.";
+    }
+
+    if (text.includes("react")) {
+      return "Yes! React is one of Kashif's main frontend technologies. He uses React to build reusable, responsive and interactive interfaces.";
+    }
+
+    if (text.includes("hello") || text.includes("hi") || text.includes("hey")) {
+      return "Hello! 👋 Nice to meet you. Feel free to ask me about Kashif's skills, projects, experience or contact information.";
+    }
+
+    return "That's an interesting question! You can ask me about Muhammad Kashif's skills, projects, React experience, background or how to contact him.";
+  };
+
+  const sendMessage = (message = input) => {
+    const text = message.trim();
+
+    if (!text || isTyping) return;
+
+    const userMessage = {
+      id: Date.now(),
+      sender: "user",
+      text,
+      time: "Now",
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsTyping(true);
+
+    setTimeout(() => {
+      const botMessage = {
+        id: Date.now() + 1,
+        sender: "bot",
+        text: getBotResponse(text),
+        time: "Now",
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+      setIsTyping(false);
+    }, 900);
+  };
+
+  return (
+    <>
+      {/* Floating Chat Button */}
+      {!open && (
+        <Box
+          sx={{
+            position: "fixed",
+            right: { xs: 18, sm: 28 },
+            bottom: { xs: 18, sm: 28 },
+            zIndex: 1500,
+          }}
+        >
+          <IconButton
+            onClick={() => setOpen(true)}
+            sx={{
+              width: 64,
+              height: 64,
+              color: "#fff",
+              background:
+                "linear-gradient(135deg, #1976d2 0%, #7b1fa2 100%)",
+              boxShadow: "0 12px 35px rgba(25,118,210,0.35)",
+              transition: "all 0.3s ease",
+
+              "&:hover": {
+                transform: "scale(1.08)",
+                background:
+                  "linear-gradient(135deg, #1565c0 0%, #6a1b9a 100%)",
+              },
+            }}
+          >
+            <ChatRoundedIcon sx={{ fontSize: 31 }} />
+          </IconButton>
+        </Box>
+      )}
+
+      {/* Chat Window */}
+      <Fade in={open}>
+        <Paper
+          elevation={20}
+          sx={{
+            display: open ? "flex" : "none",
+            flexDirection: "column",
+
+            position: "fixed",
+            zIndex: 1600,
+
+            right: { xs: 12, sm: 28 },
+            bottom: { xs: 12, sm: 28 },
+
+            width: {
+              xs: "calc(100vw - 24px)",
+              sm: 410,
+            },
+
+            height: minimized ? "auto" : {
+              xs: "calc(100vh - 90px)",
+              sm: 620,
+            },
+
+            maxHeight: "700px",
+
+            overflow: "hidden",
+
+            borderRadius: {
+              xs: 3,
+              sm: 4,
+            },
+
+            backgroundColor: "background.paper",
+
+            border: "1px solid",
+            borderColor: "divider",
+
+            boxShadow:
+              "0 25px 70px rgba(0,0,0,0.25)",
+
+            transition: "all 0.3s ease",
+          }}
+        >
+          {/* Header */}
+          <Box
+            sx={{
+              p: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+
+              background:
+                "linear-gradient(135deg, #1976d2 0%, #7b1fa2 100%)",
+
+              color: "#fff",
+            }}
+          >
+            {/* Bot Avatar */}
+            <Avatar
               sx={{
-                background: "linear-gradient(45deg, #1976d2, #9c27b0)",
-                color: "#fff",
-                "&:hover": { transform: "scale(1.1)" }
+                width: 44,
+                height: 44,
+                backgroundColor: "rgba(255,255,255,0.18)",
+                border: "1px solid rgba(255,255,255,0.3)",
               }}
             >
-              <SendIcon />
+              <SmartToyRoundedIcon />
+            </Avatar>
+
+            {/* Title */}
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                }}
+              >
+                Portfolio Assistant
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.7,
+                  mt: 0.4,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    backgroundColor: "#4caf50",
+                  }}
+                />
+
+                <Typography
+                  variant="caption"
+                  sx={{ opacity: 0.9 }}
+                >
+                  Online
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Minimize */}
+            <IconButton
+              onClick={() => setMinimized((prev) => !prev)}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.12)",
+                },
+              }}
+            >
+              <MinimizeRoundedIcon />
+            </IconButton>
+
+            {/* Close */}
+            <IconButton
+              onClick={() => setOpen(false)}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.12)",
+                },
+              }}
+            >
+              <CloseRoundedIcon />
             </IconButton>
           </Box>
+
+          {!minimized && (
+            <>
+              {/* Welcome Area */}
+              <Box
+                sx={{
+                  px: 2,
+                  py: 1.5,
+                  backgroundColor: "action.hover",
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  Ask me anything about Kashif's
+                  background, skills or projects.
+                </Typography>
+              </Box>
+
+              {/* Messages */}
+              <Box
+                sx={{
+                  flex: 1,
+                  overflowY: "auto",
+                  p: 2,
+
+                  "&::-webkit-scrollbar": {
+                    width: 5,
+                  },
+
+                  "&::-webkit-scrollbar-thumb": {
+                    borderRadius: 10,
+                    backgroundColor: "rgba(128,128,128,0.3)",
+                  },
+                }}
+              >
+                {messages.map((message) => {
+                  const isUser = message.sender === "user";
+
+                  return (
+                    <Box
+                      key={message.id}
+                      sx={{
+                        display: "flex",
+                        justifyContent: isUser
+                          ? "flex-end"
+                          : "flex-start",
+
+                        mb: 2,
+                        gap: 1,
+                      }}
+                    >
+                      {!isUser && (
+                        <Avatar
+                          sx={{
+                            width: 30,
+                            height: 30,
+                            background:
+                              "linear-gradient(135deg, #1976d2, #7b1fa2)",
+                          }}
+                        >
+                          <SmartToyRoundedIcon
+                            sx={{ fontSize: 17 }}
+                          />
+                        </Avatar>
+                      )}
+
+                      <Box
+                        sx={{
+                          maxWidth: "78%",
+                        }}
+                      >
+                        <Paper
+                          elevation={0}
+                          sx={{
+                            px: 1.5,
+                            py: 1.2,
+
+                            borderRadius: isUser
+                              ? "18px 18px 4px 18px"
+                              : "18px 18px 18px 4px",
+
+                            background: isUser
+                              ? "linear-gradient(135deg, #1976d2, #7b1fa2)"
+                              : "action.hover",
+
+                            color: isUser
+                              ? "#fff"
+                              : "text.primary",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              lineHeight: 1.55,
+                              whiteSpace: "pre-wrap",
+                            }}
+                          >
+                            {message.text}
+                          </Typography>
+                        </Paper>
+
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{
+                            display: "block",
+                            mt: 0.4,
+                            px: 0.5,
+                            textAlign: isUser
+                              ? "right"
+                              : "left",
+                          }}
+                        >
+                          {message.time}
+                        </Typography>
+                      </Box>
+
+                      {isUser && (
+                        <Avatar
+                          sx={{
+                            width: 30,
+                            height: 30,
+                            backgroundColor: "action.selected",
+                            color: "text.secondary",
+                          }}
+                        >
+                          <PersonRoundedIcon
+                            sx={{ fontSize: 17 }}
+                          />
+                        </Avatar>
+                      )}
+                    </Box>
+                  );
+                })}
+
+                {/* Typing Indicator */}
+                {isTyping && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 2,
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 30,
+                        height: 30,
+                        background:
+                          "linear-gradient(135deg, #1976d2, #7b1fa2)",
+                      }}
+                    >
+                      <SmartToyRoundedIcon
+                        sx={{ fontSize: 17 }}
+                      />
+                    </Avatar>
+
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        px: 2,
+                        py: 1.2,
+                        borderRadius: 3,
+                        backgroundColor: "action.hover",
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        ● ● ●
+                      </Typography>
+                    </Paper>
+                  </Box>
+                )}
+
+                <div ref={messagesEndRef} />
+              </Box>
+
+              <Divider />
+
+              {/* Quick Questions */}
+              <Box
+                sx={{
+                  px: 1.5,
+                  pt: 1.2,
+                  overflowX: "auto",
+                  display: "flex",
+                  gap: 0.8,
+
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                }}
+              >
+                {quickQuestions.map((question) => (
+                  <Chip
+                    key={question}
+                    label={question}
+                    onClick={() => sendMessage(question)}
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      flexShrink: 0,
+                      cursor: "pointer",
+                      borderRadius: 3,
+
+                      "&:hover": {
+                        backgroundColor: "action.hover",
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
+
+              {/* Input */}
+              <Box
+                sx={{
+                  p: 1.5,
+                  display: "flex",
+                  gap: 1,
+                  alignItems: "center",
+                }}
+              >
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={input}
+                  placeholder="Ask something..."
+                  onChange={(e) =>
+                    setInput(e.target.value)
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      sendMessage();
+                    }
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 3,
+                    },
+                  }}
+                />
+
+                <IconButton
+                  onClick={() => sendMessage()}
+                  disabled={!input.trim() || isTyping}
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    color: "#fff",
+
+                    background:
+                      "linear-gradient(135deg, #1976d2, #7b1fa2)",
+
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #1565c0, #6a1b9a)",
+                    },
+
+                    "&.Mui-disabled": {
+                      backgroundColor: "action.disabledBackground",
+                    },
+                  }}
+                >
+                  <SendRoundedIcon />
+                </IconButton>
+              </Box>
+
+              {/* Footer */}
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  textAlign: "center",
+                  pb: 1,
+                }}
+              >
+                AI Portfolio Assistant
+              </Typography>
+            </>
+          )}
         </Paper>
-      </Modal>
+      </Fade>
     </>
   );
 }
