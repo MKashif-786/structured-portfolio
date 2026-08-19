@@ -21,7 +21,7 @@ export default function HomePage() {
       </Typography>
       <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
         <Button component={Link} to="/projects" variant="contained" size="large">See My Work</Button>
-        <Button component={Link} to="/chatbot" variant="outlined" size="large">Start Chatting</Button>
+        <Button component={Link} to="/chatbots" variant="outlined" size="large">Start Chatting</Button>
       </Box>
     </Box>
   );

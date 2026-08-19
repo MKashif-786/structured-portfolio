@@ -13,7 +13,7 @@ import ProjectsPage from "./Pages/ProjectsPage";
 import ContactPage from "./Pages/ContactPage";
 import ChatbotPage from "./Pages/ChatbotPage";
 import Services from "./Pages/Services";
-
+import Chatbots from "../src/components/MychatBot";
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
@@ -36,7 +36,8 @@ export default function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/chatbot" element={<ChatbotPage />} />
+            {/* <Route path="/chatbot" element={<ChatbotPage />} /> */}
+            <Route path="/chatbots" element={<Chatbots />} />
             <Route path="/services" element={<Services />} />
             <Route path="*" element={<HomePage />} /> {/* fallback to home */}
           </Routes>
